@@ -23,7 +23,7 @@ defmodule Mustache.TokenizerTest do
     text = """
     {{#if person.alive }}
      I'm alive!!
-    {{else }}
+    {{else}}
      I'm dead :(
     {{/if }}
     """
