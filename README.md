@@ -1,24 +1,8 @@
 # Mustache
 
-**TODO: Add description**
+This is a limited implementation of [Mustache(5)](http://mustache.github.io/mustache.5.html)
 
-## Installation
+The Goal of this project is to have limited basic Mustache functionality:
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `mustache` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:mustache, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `mustache` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:mustache]]
-    end
-    ```
-
+- With some added (Handlebars) functionality
+- Without the ability to execute arbitrary code
