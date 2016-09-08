@@ -24,12 +24,8 @@ defmodule Mustache.Tokenizer do
     tokenize(tail, [], acc ++ tag(buf), :text)
   end
 
-  def tokenize([head|tail], buf, acc, :tag) do
-    tokenize(tail, buf ++ [head], acc, :tag)
-  end
-
-  def tokenize([head|tail], buf, acc, :text) do
-    tokenize(tail, buf ++ [head], acc, :text)
+  def tokenize([head|tail], buf, acc, state) do
+    tokenize(tail, buf ++ [head], acc, state)
   end
 
   def tokenize([], [], acc, _state) do
