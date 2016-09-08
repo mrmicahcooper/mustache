@@ -8,37 +8,45 @@ defmodule Mustache.Tokenizer do
     tokenize(text, [], [], :text)
   end
 
-  def tokenize('{{' ++ tail, buffer, acc, :text) do
-    tokenize(tail, [], acc ++ text(buffer), :tag)
+  def tokenize('{{{' ++ tail, buf, acc, :text) do
+    tokenize(tail, [], acc ++ text(buf), :tag)
   end
 
-  def tokenize('}}' ++ tail, buffer, acc, :tag) do
-    tokenize(tail, [], acc ++ tag(buffer), :text)
+  def tokenize('}}}' ++ tail, buf, acc, :tag) do
+    tokenize(tail, [], acc ++ tag(buf, :raw), :text)
   end
 
-  def tokenize([head|tail], buffer, acc, :tag) do
-    tokenize(tail, buffer ++ [head], acc, :tag)
+  def tokenize('{{' ++ tail, buf, acc, :text) do
+    tokenize(tail, [], acc ++ text(buf), :tag)
   end
 
-  def tokenize([head|tail], buffer, acc, :text) do
-    tokenize(tail, buffer ++ [head], acc, :text)
+  def tokenize('}}' ++ tail, buf, acc, :tag) do
+    tokenize(tail, [], acc ++ tag(buf), :text)
+  end
+
+  def tokenize([head|tail], buf, acc, :tag) do
+    tokenize(tail, buf ++ [head], acc, :tag)
+  end
+
+  def tokenize([head|tail], buf, acc, :text) do
+    tokenize(tail, buf ++ [head], acc, :text)
   end
 
   def tokenize([], [], acc, _state) do
     acc
   end
 
-  def tokenize([], buffer, acc, _state) do
-    acc ++ [{:text, to_string(buffer)}]
+  def tokenize([], buf, acc, _state) do
+    acc ++ [{:text, to_string(buf)}]
   end
 
-  defp tag(buffer) do
-    access = buffer |> to_string |> String.split([".", "/"])
-    [{:get_in, access}]
+  defp tag(buf, escape\\:escaped) do
+    access = buf |> to_string |> String.trim() |>  String.split([".", "/"])
+    [{:get_in, access, escape}]
   end
 
-  defp text(buffer) do
-    [{:text, to_string(buffer)}]
+  defp text(buf) do
+    [{:text, to_string(buf)}]
   end
 
 end
