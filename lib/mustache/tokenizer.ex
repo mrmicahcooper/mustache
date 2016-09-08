@@ -1,48 +1,40 @@
 defmodule Mustache.Tokenizer do
 
-  def tokenize(text) when is_binary(text) do
-    tokenize String.to_charlist(text)
+  def parse(text) when is_binary(text), do: parse String.to_charlist(text)
+  def parse(text) when is_list(text),   do: parse(text, [], [], :text)
+
+  def parse('{{{' ++ tail, buf, acc, state) do
+     parse(tail, [], acc ++ tokenize(buf, state), :raw_tag)
   end
 
-  def tokenize(text) when is_list(text) do
-    tokenize(text, [], [], :text)
+  def parse('}}}' ++ tail, buf, acc, state) do
+    parse(tail, [], acc ++ tokenize(buf, state), nil)
   end
 
-  def tokenize('{{{' ++ tail, buf, acc, :text) do
-    tokenize(tail, [], acc ++ text(buf), :tag)
+  def parse('{{' ++ tail, buf, acc, state) do
+    parse(tail, [], acc ++ tokenize(buf, state), :escaped_tag)
   end
 
-  def tokenize('}}}' ++ tail, buf, acc, :tag) do
-    tokenize(tail, [], acc ++ tag(buf, :raw), :text)
+  def parse('}}' ++ tail, buf, acc, state) do
+    parse(tail, [], acc ++ tokenize(buf, state), nil)
   end
 
-  def tokenize('{{' ++ tail, buf, acc, :text) do
-    tokenize(tail, [], acc ++ text(buf), :tag)
-  end
+  def parse([], [], acc, _state),          do: acc
+  def parse([], buf, acc, state),          do: acc ++ tokenize(buf, state)
+  def parse([head|tail], buf, acc, nil),   do: parse(tail, buf ++ [head], acc, :text)
+  def parse([head|tail], buf, acc, state), do: parse(tail, buf ++ [head], acc, state)
 
-  def tokenize('}}' ++ tail, buf, acc, :tag) do
-    tokenize(tail, [], acc ++ tag(buf), :text)
-  end
-
-  def tokenize([head|tail], buf, acc, state) do
-    tokenize(tail, buf ++ [head], acc, state)
-  end
-
-  def tokenize([], [], acc, _state) do
-    acc
-  end
-
-  def tokenize([], buf, acc, _state) do
-    acc ++ [{:text, to_string(buf)}]
-  end
-
-  defp tag(buf, escape\\:escaped) do
-    access = buf |> to_string |> String.trim() |>  String.split([".", "/"])
-    [{:get_in, access, escape}]
-  end
-
-  defp text(buf) do
+  defp tokenize(buf, :text) do
     [{:text, to_string(buf)}]
+  end
+
+  defp tokenize(buf, state) when state in [:escaped_tag, :raw_tag] do
+    access = buf |> to_string |> String.trim() |>  String.split([".", "/"])
+    [{:get_in, access, state}]
+  end
+
+  defp tokenize(buf, state) do
+    []
   end
 
 end
