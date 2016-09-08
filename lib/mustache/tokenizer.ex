@@ -27,7 +27,7 @@ defmodule Mustache.Tokenizer do
   defp token([], :text),     do: []
   defp token(buf, :text),    do: [{:text, to_string(buf)}]
 
-  defp token(buf, state) when state in @empty_token_states do
+  defp token(_buf, state) when state in @empty_token_states do
     [{state, nil}]
   end
 
