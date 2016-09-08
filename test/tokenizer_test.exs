@@ -38,6 +38,26 @@ defmodule Mustache.TokenizerTest do
     ]
   end
 
+  test "each" do
+    text = """
+    {{#each person.hobbies }}
+    My hobby is {{name}} {{description.text}}
+    {{/each }}
+    """
+    tokens = Mustache.Tokenizer.parse(text)
+    assert tokens == [
+      {:start_each, ["person","hobbies"]},
+      {:text, "\nMy hobby is "},
+      {:escaped_tag, ["name"]},
+      {:text, " "},
+      {:escaped_tag, ["description", "text"]},
+      {:text, "\n"},
+      {:end_each, nil},
+      {:text, "\n"},
+    ]
+  end
+
+
   test "returns tokens for passed in binary of just a string" do
     text = "Hello there"
     tokens = Mustache.Tokenizer.parse(text)
