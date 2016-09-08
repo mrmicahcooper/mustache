@@ -3,8 +3,8 @@ defmodule Mustache.Tokenizer do
   @empty_token_states ~w[end_if end_each else]a
   @section_states ~w[escaped_tag raw_tag start_if start_each]a
 
-  def parse(text) when is_binary(text), do: parse String.to_charlist(text)
-  def parse(text) when is_list(text),   do: parse(text, [], [], :text)
+  def parse(source) when is_binary(source), do: parse String.to_charlist(source)
+  def parse(source) when is_list(source),   do: parse(source, [], [], :text)
 
   def parse('{{{' ++ tail, buf, acc, state),     do: parse(tail, [], acc ++ token(buf, state), :raw_tag)
   def parse('}}}' ++ tail, buf, acc, state),     do: parse(tail, [], acc ++ token(buf, state), nil)
