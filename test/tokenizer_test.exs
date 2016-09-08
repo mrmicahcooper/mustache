@@ -9,12 +9,31 @@ defmodule Mustache.TokenizerTest do
     tokens = Mustache.Tokenizer.parse(text)
     assert tokens == [
       {:text, "Hello there "},
-      {:get_in, ["name"], :escaped_tag},
+      {:escaped_tag, ["name"]},
       {:text, ". I am "},
-      {:get_in, ["person", "age"], :escaped_tag},
+      {:escaped_tag, ["person", "age"]},
       {:text, " years old.\nI am "},
-      {:get_in, ["person", "height"], :raw_tag},
-      {:get_in, ["person", "weight"], :escaped_tag},
+      {:raw_tag, ["person", "height"]},
+      {:escaped_tag, ["person", "weight"]},
+      {:text, "\n"},
+    ]
+  end
+
+  test "conditionals" do
+    text = """
+    {{#if person.alive }}
+     I'm alive!!
+    {{else }}
+     I'm dead :(
+    {{/if }}
+    """
+    tokens = Mustache.Tokenizer.parse(text)
+    assert tokens == [
+      {:start_if, ["person","alive"]},
+      {:text, "\n I'm alive!!\n"},
+      {:else, nil},
+      {:text, "\n I'm dead :(\n"},
+      {:end_if, nil},
       {:text, "\n"},
     ]
   end
