@@ -10,4 +10,11 @@ defmodule Mustache.Utilities do
       }[capture]
     end)
   end
+
+  def present?([]), do: false
+  def present?(""), do: false
+  def present?(nil), do: false
+  def present?(%{}=object), do: present?(Map.keys(object))
+  def present?(_), do: true
+
 end

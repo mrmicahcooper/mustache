@@ -34,4 +34,26 @@ defmodule Mustache.CompilerTest do
     """
   end
 
+  test "handling conditionals" do
+    text = """
+    Is the name there?
+    {{#if name}}
+    YES! it's {{name}}!
+    {{/if}}
+    Is the other name there?
+    {{#if other_name}}
+    YES! it's {{other_name}}!
+    {{/if}}
+    """
+    object = %{ "name" => "", "other_name" => "Bob"}
+    result = Mustache.Compiler.eval_string(text, object)
+    assert result == """
+    Is the name there?
+
+    Is the other name there?
+
+    YES! it's Bob!
+    """
+  end
+
 end
