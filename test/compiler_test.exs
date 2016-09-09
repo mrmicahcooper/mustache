@@ -1,12 +1,18 @@
 defmodule Mustache.CompilerTest do
   use ExUnit.Case, async: true
 
+  test ".compile_string" do
+    text = "Hello there"
+    result = Mustache.Compiler.compile_string(text)
+    assert result == {:<>, [context: Mustache.Compiler, import: Kernel], ["", "Hello there"]}
+
+  end
+
   test "Returns an evaled string with no data" do
     text = "Hello there"
     result = Mustache.Compiler.eval_string(text, %{})
     assert result == "Hello there"
   end
-
 
   test "compiling returns an Elixir AST" do
     text = """
@@ -16,7 +22,7 @@ defmodule Mustache.CompilerTest do
     object = %{
       "name" => "Micah",
       "person" => %{
-        "age"    => 29,
+        "age"    => "29",
         "height" => "<99 feet tall>",
         "weight" => "<25 pounds>",
       }
