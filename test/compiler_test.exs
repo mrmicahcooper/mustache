@@ -39,6 +39,8 @@ defmodule Mustache.CompilerTest do
     Is the name there?
     {{#if name}}
     YES! it's {{name}}!
+    {{else}}
+    NOPE!
     {{/if}}
     Is the other name there?
     {{#if other_name}}
@@ -50,6 +52,7 @@ defmodule Mustache.CompilerTest do
     assert result == """
     Is the name there?
 
+    NOPE!
     Is the other name there?
 
     YES! it's Bob!
