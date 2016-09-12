@@ -5,7 +5,6 @@ defmodule Mustache.CompilerTest do
     text = "Hello there"
     result = Mustache.Compiler.compile_string(text)
     assert result == {:<>, [context: Mustache.Compiler, import: Kernel], ["", "Hello there"]}
-
   end
 
   test "Returns an evaled string with no data" do

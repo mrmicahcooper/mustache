@@ -57,7 +57,6 @@ defmodule Mustache.TokenizerTest do
     ]
   end
 
-
   test "returns tokens for passed in binary of just a string" do
     text = "Hello there"
     tokens = Mustache.Tokenizer.parse(text)
