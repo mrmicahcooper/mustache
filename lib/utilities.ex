@@ -1,4 +1,5 @@
 defmodule Mustache.Utilities do
+  def html_escape(nil), do: ""
   def html_escape(string) do
     Regex.replace(~r/(\\|&|<|>|")/, string, fn(capture) ->
       %{

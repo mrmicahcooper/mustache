@@ -62,7 +62,7 @@ defmodule Mustache.Compiler do
   defp skip_to_end_if([_head|tail]), do: skip_to_end_if(tail)
 
   defp skip_to_else([{:else, _}|tail]), do: tail
-  defp skip_to_else([{:end_if, _}|tail]), do: []
+  defp skip_to_else([{:end_if, _}|_tail]), do: []
   defp skip_to_else([]), do: []
   defp skip_to_else([_head|tail]), do: skip_to_else(tail)
 end
