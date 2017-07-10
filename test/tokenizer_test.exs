@@ -40,13 +40,13 @@ defmodule Mustache.TokenizerTest do
 
   test "each" do
     text = """
-    {{#each person.hobbies }}
+    {{#each person.hobbies |hobby| }}
     My hobby is {{name}} {{description.text}}
     {{/each }}
     """
     tokens = Mustache.Tokenizer.parse(text)
     assert tokens == [
-      {:start_each, ["person","hobbies"]},
+      {:start_each, ["person","hobbies"], "hobby"}, #{ state, access, proxy }
       {:text, "\nMy hobby is "},
       {:escaped_tag, ["name"]},
       {:text, " "},

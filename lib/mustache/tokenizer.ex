@@ -22,6 +22,10 @@ defmodule Mustache.Tokenizer do
 
   def token("", :text),  do: []
   def token(buf, :text), do: [{:text, buf}]
+  def token(buf, :start_each) do
+    [buf, proxy, _] = buf |> String.replace(" ", "") |> String.split("|")
+    [{:start_each, access(buf), proxy}]
+  end
   def token(buf, state)  when state in @section_states, do: [{state, access(buf)}]
   def token(_buf, state) when state in @empty_token_states,do: [{state, nil}]
   def token("", _state),  do: []
