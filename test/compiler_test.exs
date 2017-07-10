@@ -1,19 +1,19 @@
 defmodule Mustache.CompilerTest do
   use ExUnit.Case, async: true
 
-  test ".compile_string" do
+  test ".compile_string with no data" do
     text = "Hello there"
     result = Mustache.Compiler.compile_string(text)
     assert result == {:<>, [context: Mustache.Compiler, import: Kernel], ["", "Hello there"]}
   end
 
-  test "Returns an evaled string with no data" do
+  test ".eval_string with NO data" do
     text = "Hello there"
     result = Mustache.Compiler.eval_string(text, %{})
     assert result == "Hello there"
   end
 
-  test "compiling returns an Elixir AST" do
+  test "eval_string with data" do
     text = """
     Hello there {{name}}. I am {{person.age}} years old.
     I am {{{ person/height }}} and {{person.weight}}
@@ -33,7 +33,7 @@ defmodule Mustache.CompilerTest do
     """
   end
 
-  test "handling conditionals" do
+  test ".eval_string with conditionals" do
     text = """
     Is the name there?
     {{#if name}}
